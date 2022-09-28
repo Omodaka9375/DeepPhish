@@ -3,6 +3,8 @@
 
 A light inspection and detection plugin that uses machine learning and a set of recon tools to scrutinize any website for unsafe content. It is built with privacy in mind. Classification is done on the client side. No user data is collected.
 
+![DeepPhish](images/detective.png)
+
 ## Features
 
 ### Detection
