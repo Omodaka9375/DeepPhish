@@ -91,5 +91,5 @@ Enter your own keys (free tier will do):
 
 ## License
 
-[MIT](LICENSE)
+[GPL-V3](LICENSE)
 
