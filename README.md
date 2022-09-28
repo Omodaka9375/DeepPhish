@@ -33,10 +33,10 @@ A light inspection and detection plugin that uses machine learning and a set of 
 
 - Use context menu on a page (right-click "Inspect page with DeepPhish")
 - Use context menu on a link (right-click "Inspect link with DeepPhish")
-- Open new tab and click DeepPhish icon at top right to show direct search
 
 ## API keys 
 
+Open a new, empty tab and click on DeepPhish icon at top right to show API page.
 Enter your own keys (free tier will do):
 
 ![API](images/apikeys.png)
