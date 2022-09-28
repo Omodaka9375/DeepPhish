@@ -12,12 +12,12 @@ A light inspection and detection plugin that uses machine learning and a set of 
 - Real-time detection as you browse (using ML)
 - Real-time website analysis and scoring (0 to 100)
 - Historical score tracking and notification for decreased/increased security (in case of defacing, hacking etc.)
-- Do Not Disturbe mode
+- Do Not Disturb mode
 - Mute notification for certain websites only
 
 ### Inspection
 
-- Requests, nework graph
+- Requests, network graph
 - DNS, domain, subdomains, whois information
 - GeoIP, ads, crawlers, page links
 - Page source, cookies, reputation . . .
@@ -95,5 +95,4 @@ Enter your own keys (free tier will do):
 
 ## License
 
-[GPL-V3](LICENSE)
-
+[GPL-3.0](LICENSE)
