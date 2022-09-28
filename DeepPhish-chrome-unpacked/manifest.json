@@ -1,0 +1,35 @@
+{
+  "manifest_version": 2,
+  "name": "Deep Phish",
+  "version": "1.0.0",
+  "description": "A website inspection and phishing detection plugin that uses ML to detect and recon tools to scrutinize any website for unsafe content.",
+  "options_page": "inspect.html",
+  "incognito": "spanning",
+  "author": "https://github.com/Omodaka9375",
+  "permissions": ["activeTab", "storage", "webNavigation",	"contextMenus",	"webRequest","<all_urls>"],
+  "background": {
+    "scripts": [
+      "js/background.js",
+      "js/jquery.js",
+      "js/randomforest.js"
+    ],
+    "persistent": true
+  },
+  "icons": { 
+    "16": "detective.png",
+    "48": "detective.png",
+    "128": "detective.png" 
+  },
+  "browser_action": {
+    "default_popup": "plugin_ui.html",
+    "browser_style": true,
+    "default_icon": "detective.png",
+    "default_title": "A website inspection and phishing detection plugin that uses ML to detect and recon tools to scrutinize any website for unsafe content."
+  },
+  "content_scripts":[
+    {
+      "matches": ["http://*/*","https://*/*"],
+      "js": ["js/jquery.js","js/features.js"]
+    }
+  ]
+}

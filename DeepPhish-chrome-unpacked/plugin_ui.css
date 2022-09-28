@@ -1,0 +1,143 @@
+html {
+    height: auto;
+}
+body {
+    padding: 0px;
+    margin: 0px;
+    background: #fff;
+    height: 550px;
+    
+}
+#plugin_name {
+    width: 330px;
+    margin: 0 0;
+    background-color: #0093E9;
+    background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
+}
+h2 {
+    margin-top: 20px;
+   
+    font-family: 'Josefin Sans', sans-serif;
+    text-align: center;
+    font-size: 15px;
+}
+h1 {
+    font-family: 'Russo One', sans-serif;
+    color: white;
+    font-size: 25px;
+    padding: 10px;
+    text-align: center;
+}
+.rounded-circle {
+    background-color: #3ff451;
+    background-image: linear-gradient(132deg, #3ff451 0%, #16A085 100%);
+    
+    width: 10rem;
+    height: 10rem;
+    padding: 10px;
+    clear: both;
+    align-content: center;
+    margin: 0 auto; 
+
+}
+#site_score{
+    font-family: 'Josefin Sans', sans-serif;
+    color: white;
+    font-weight: bold;
+    position: relative;
+    top: 25px;
+
+    text-align: center;
+    font-size: 70px;
+}
+#site_msg{
+    margin-top: 20px;
+    margin-bottom: 5px;
+    font-family: 'Josefin Sans', sans-serif;
+    text-align: center;
+    font-size: 18px;
+    overflow: hidden;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+ul {
+    list-style: none;
+}
+
+li {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    margin: 2px;
+    display: inline-block;
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    color: #fff;
+    border-radius: 5px;
+}
+
+iframe {
+    margin: 10px;
+    display: inline-block;
+}
+
+a {
+    text-align: center;
+    display: block;
+    color: #195975;
+    margin-bottom:10px;
+}
+
+#test {
+    text-align: center;
+    display: block;
+}
+
+#mtoast {
+    /* (A) POSITION */
+    position: fixed; z-index: 99;
+    top: 5px; right: 5px;
+   
+    /* (B) DIMENSION */
+    width: 200px;
+    padding: 10px;
+   
+    /* (C) COLORS */
+    border: 1px solid #c52828;
+    background: #ffebe1;
+    border: 1px solid #000;
+   
+    /* (D) HIDDEN BY DEFAULT */
+    display: none;
+  }
+
+  #indicators{
+    position: absolute;
+    top: 140px;
+    left: 28px;
+    width: 50px;
+  }
+
+  .arrow-up {
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 20px solid white;
+    margin-left: 122px;
+    margin-bottom: -20px;
+    opacity: 80%;
+  }
+  
+  .arrow-down {
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 20px solid white;
+    margin-top: 100px;
+    margin-left: 122px;
+    opacity: 80%;
+  }

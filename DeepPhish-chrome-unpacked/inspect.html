@@ -1,0 +1,451 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>DeepPhish</title>
+        <link rel="icon" type="image/png" href="favicon.ico" />
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/material-icon.css">
+		<link rel="stylesheet" href="css/css.css">
+		<link rel="dns-prefetch" href="//safebrowsing.googleapis.com">
+		<link rel="dns-prefetch" href="//checkurl.phishtank.com">
+		<link rel="preconnect" href="//ssl.google-analytics.com">
+		<link rel="preconnect" href="//api.hackertarget.com">
+		<link rel="preconnect" href="//archive.org">
+		<link rel="preconnect" href="//ip-api.com">
+		<script rel="subresource" src="js/jquery.js"></script>
+		<script src="js/lib/popper.min.js"></script>
+		<script src="js/lib/bootstrap.min.js"></script>
+        <script src="js/lib/table2excel.js"></script>
+        <script src="js/lib/syntaxHighlighter.js"></script>
+        <script src="js/lib/syntaxHighlighter-extra.js"></script>
+		<script src="js/deepphish.js"></script>
+    </head>
+    <body>		
+		<div id="isOnline"></div>
+		<div id="home" class="container justify-content-center">
+			<div id="inputPane" class="d-flex justify-content-center align-items-center" style="height: 3%">
+				<div class="col-md-auto justify-content-center">
+					<div class="row flex-row d-flex justify-content-center">
+						<span>
+							<div id="logo"></div><h2 style="margin-top: 30px; font-family: monospace;">DeepPhish</h2>
+						</span>
+					</div>
+					<div class="row flex-row d-flex justify-content-center">
+						<p align="center" style="padding: 3em 0 0 0"></p>
+					</div>
+					<div class="row flex-row d-flex justify-content-center">
+						<div style="background-color: #fafafa;margin:auto;border-radius: 10px;position:absolute;width:640px;" class="container">
+							<nav id="inputMenu">
+								<div class="tab-content" style="padding-bottom: 20px; ">
+									<!-- URL Inspect -->
+									<div class="tab-pane active" id="inspect">
+										<p align="center" style="padding: 1.3em">Enter a URL and press enter to scrutinize it</p>
+										<div class="input-group col-md-12" style="min-width:620px" id="input-group">
+											<input id="url-input" type="url" name="url" placeholder="https://example.com"  style="padding: 5px" pattern="[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)+.*" required title="Input must be a valid URL or domain. For example: https://example.com/hello/download.html, example.com, download.example.com" class="form-control" aria-label="http://example.com" aria-describedby="basic-addon2"/ >
+											<div class="input-group-append">
+												<button id="url-submit" for="url-input" class="material-icons btn btn-outline-secondary" type="button" style="border: 1px solid #ced4da; cursor: pointer">search</button>
+											</div>
+										</div>
+										<br>
+									</div>
+									<button id="toggleAPI" style="padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; margin-bottom: 20px; margin-left: 15px;border-radius:10px;">API Keys</button>
+									<div id="api_div" style="display: none; margin-left: 15px;">
+										<input type="text" id="gmapskey" placeholder="Enter Gmaps key" style="width: 100%; margin-bottom: 10px; padding-left: 5px; height: 30px;"/><br>
+										<input type="text" id="whoisxmlapi" placeholder="Enter Whoisxmlapi key" style="width: 100%; margin-bottom: 10px; padding-left: 5px; height: 30px;"/><br>
+										<input type="text" id="phishTank" placeholder="Enter PhishTank key" style="width: 100%; margin-bottom: 10px; padding-left: 5px; height: 30px;"/><br>
+										<input type="text" id="safeBrowse" placeholder="Enter SafeBrowse key" style="width: 100%; margin-bottom: 10px; padding-left: 5px; height: 30px;"/><br>
+										<input type="text" id="hackerTarget" placeholder="Enter HackerTarget key" style="width: 100%; margin-bottom: 10px; padding-left: 5px; height: 30px;"/><br>
+										<button id="submit_api" style="padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; border-radius:10px">Save Keys</button>
+									</div>
+								</div>
+							</nav>
+							<span class="navTarget"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="scanResults">
+			<div style="background-color:#fff" class="fixed-top">
+				<div class="media" id="infoSection1" style="padding: 0.6em;">
+					<img id="tabIcon" src="detective.png" width="100" class="align-self-center mr-3" alt="DeepPhish">
+					<div class="media-body">
+						<h5 class="mt-0 url"></h5>
+						<p id="ipAddr"></p>
+						<p id="tagsDetected"></p>
+					</div>
+				</div>
+				<span id="version" style="font-size:14px;font-weight:600;color:rgba(0,0,0,0.4);display:block;z-index:9;position:fixed;top:4px;right:8px">DeepPhish v1.0</span>
+			<div id="alertUser" style="display:block;z-index:8;position:fixed;top:1%;right:2%">
+				<div id="infoIncognito" class="alert alert-warning alert-dismissible" role="alert">
+				  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				</div>
+			</div>
+			
+			<!-- Navigation -->
+			<nav class="navbar navbar-expand-md navbar-dark bg-dark" style="margin-top: -3px">
+				<div class="collapse navbar-collapse" id="navbar-menu">
+					<ul id="ctTab" class="navbar-nav mr-auto" style="margin-left:0px">
+						<li id="comTab">
+							<a href="#url-components" data-toggle="tab" title="Web requests & responses" class="nav-link">Network</a>
+						</li>
+						<li id="graphTab">
+							<a href="#domain-graph" data-toggle="tab" title="Domain graph - click to explore Graph and dig into relationships" class="nav-link">Graph</a>
+						</li>
+						<li id="safeFrameTab">
+							<a href="#safe-frame" data-toggle="tab" title="SafeFrame" class="nav-link">SafeFrame</a>
+						</li>
+						<li id="fraViewSrcTab">
+							<a href="#frame-viewsourcecode" data-toggle="tab" title="View Page source of URL loaded on Frame window" class="nav-link">Page source</a>
+						</li>
+						<li id="whoisLookup">
+							<a href="#whois" data-toggle="tab" title="Whois Lookup" class="nav-link">Whois</a>
+						</li>
+						<li id="subDomain">
+							<a href="#sub-domain" data-toggle="tab" title="Subdomain" class="nav-link">Subdomain</a>
+						</li>
+						<li id="dnsLookup">
+							<a href="#dns" data-toggle="tab" title="DNS" class="nav-link">DNS</a>
+						</li>
+
+						<li id="poTab">
+							<a href="#domains-list" data-toggle="tab" title="Captured domains list" class="nav-link">Domain list</a>
+						</li>
+						<li id="pageLinks">
+							<a href="#page-links" data-toggle="tab" title="Extracted Page Links" class="nav-link">Page links</a>
+						</li>
+						<li id="geoIP">
+							<a href="#geo-ip-location" data-toggle="tab" title="GeoIP – IP Location Lookup" class="nav-link">Geo IP</a>
+						</li>
+
+						<li id="url-cookies">
+							<a href="#cookies" data-toggle="tab" title="Cookies" class="nav-link">Cookies</a>
+						</li>
+
+						<li id="pageArchive">
+							<a href="#page-archive" data-toggle="tab" title="Page Archive" class="nav-link">Archive</a>
+						</li>
+						<li id="domainReputation">
+							<a href="#domain-reputation" data-toggle="tab" title="URL Reputation" class="nav-link">Reputation</a>
+						</li>
+						<li id="inspectAds">
+							<a href="#adSlot" data-toggle="tab" title="Inspect website for Ads slot" class="nav-link">Ads</a>
+						</li>
+						<li id="crawlers">
+							<a href="#webCrawlers" data-toggle="tab" title="Web Crawlers" class="nav-link">Crawlers</a>
+						</li>
+					</ul>
+				</div>
+			</nav>
+			</div>
+			<!-- Nav Tabs Contents-->
+        	<div class="tab-content" id="NavTabsContents" style="padding-top: 150px">
+				<!-- Creative/URL Loader Frame -->
+				<!-- URL Components -->
+				<div class="tab-pane fade active" id="url-components">
+					<div class="myRow">
+						<div id="liveTrafficContainer">
+							<div>
+								<div class="input-group" style="margin: 9px 0 9px 0">
+									<span style="position:absolute;margin:6px;display: flex;align-items:center;color:#8ca1b6;" class="material-icons">search</span>
+									<input id="liveNetworkTrafficSearch" class="form-control" placeholder="Filter.." type="search" style="background-color: rgba(0,0,0,.075);width: 100%;height: auto;padding-left: 35px;outline:none;box-shadow:none !important;border:1px solid #ccc !important;" />
+								</div>
+							</div>
+							<table id="liveNetworkTraffic" class="trafficTable" data-role="table" data-mode="columntoggle" data-filter="true" data-input="#liveNetworkTrafficSearch">
+								<thead>
+									<tr>
+										<th data-priority="7" title="The Request ID (#) is unique within a browser session and it remains constant during the the life cycle of a request and can be used to match events for the same request. Note that several HTTP requests are mapped to one web request in case of HTTP redirection or HTTP authentication.">#</th>
+										<th data-priority="6">Status</th>
+										<th data-priority="8" title="in bytes">Size</th>
+										<th data-priority="4">Type</th>
+										<th data-priority="3">Tags</th>
+										<th data-priority="1">Initiator</th>
+										<th data-priority="2">Domain</th>
+										<th data-priority="5">URL</th>
+									</tr>
+								</thead>
+								<tbody id="tbody">
+								</tbody>
+							</table>                    
+						</div>
+						<div class="iconBox">
+							<i id="tabToXlsx" class="iconStyle material-icons" title="Click here to download this traffic logs">save_alt </i>
+						</div>
+					</div>
+				</div>
+				<!-- Domain Graph -->
+				<div class="tab-pane fade" id="domain-graph">
+					<div id="dListGraph"></div>
+				</div>
+				<!-- SafeFrame -->
+				<div class="tab-pane fade" id="safe-frame" style="margin: 6px">
+					<iframe id="safeFrame"></iframe>
+				</div>
+				<!-- Frame Source code -->
+				<div class="tab-pane fade" id="frame-viewsourcecode">
+					<div class="myRow">
+						<div class="card" id="srcCodeContainer">
+							<h5 class="card-header">Page source</h5>
+							<div class="card-body">
+								<pre class="card-text" data-lllanguage="html" data-llstyle="light" id="srcCodePre" style="min-height: 640px">
+								</pre>
+							</div>
+						</div>
+					</div>
+					<div class="iconBox">
+						<i id="saveBtnPgSrc" class="iconStyle material-icons" title="Click here to download">save_alt </i>
+						<i id="copyBtnPgSrc" class="iconStyle material-icons">content_copy </i>
+					</div>
+				</div>
+				<!-- Whois -->
+				<div class="tab-pane fade" id="whois">
+					<div class="myRow">
+						<div class="card">
+							<h5 class="card-header">Whois</h5>
+							<div class="card-body">
+								<pre class="card-text">
+								</pre>
+							</div>
+						</div>
+					</div>
+					<div class="iconBox">
+						<i id="saveBtnWhois" class="iconStyle material-icons md-24" title="Click here to download">save_alt </i>
+						<i id="copyBtnWhois" class="iconStyle material-icons md-24">content_copy </i>
+					</div>
+				</div>
+				<!-- Subdomain -->
+				<div class="tab-pane fade" id="sub-domain">
+					<div class="myRow">
+						<div class="card">
+							<h5 class="card-header">Subdomain</h5>
+							<div class="card-body">
+								<pre class="card-text" id="subDomainResults">
+								</pre>
+							</div>
+						</div>
+					</div>
+					<div class="iconBox">
+						<i id="saveBtnSD" class="iconStyle material-icons" title="Click here to download">save_alt </i>
+						<i id="copyBtnSD" class="iconStyle material-icons">content_copy </i>
+					</div>
+				</div>
+				<!-- DNS -->
+				<div class="tab-pane fade" id="dns">
+					<h4 style="padding-top: 25px;padding-left: 10px;">DNS records for the domain:</h4><br>
+					<textarea id="dns_data" disabled="true" style="overflow: auto; width:100%; padding-left: 20px; padding-top: 20px; height:600px;">
+
+					</textarea>
+					<br>
+					<div class="iconBox">
+						<i id="saveBtnDNS" class="iconStyle material-icons" title="Click here to download">save_alt </i>
+						<i id="copyBtnDNS" class="iconStyle material-icons">content_copy </i>
+					</div>
+				</div>
+				<!-- Extracted domain list -->
+				<div class="tab-pane fade" id="domains-list">
+					<div class="myRow">
+						<div class="card">
+							<h5 class="card-header">Extracted domain list <div class="badge badge-primary"></div></h5>
+							<div class="row card-body">
+								<div class="col-md-auto">
+								<pre class="card-text" id="dList"></pre>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="iconBox">
+						<i id="saveBtnDlist" class="iconStyle material-icons" title="Click here to download">save_alt </i>
+						<i id="copyBtnDlist" class="iconStyle material-icons">content_copy </i>
+					</div>
+				</div>
+				<!-- Page Links -->
+				<div class="tab-pane fade" id="page-links" style="overflow-wrap: break-word">
+						<div class="myRow">
+							<div class="card" id="intDiv" style="display: none">
+								<h5 class="card-header">Internal page links <div class="badge badge-primary"></div></h5>
+								<div class="row card-body">
+									<div class="col-md-auto">
+										<p style="display: none">Secure links</p>
+										<ul id="https-links" style="margin-left: 20px"></ul>
+										<p style="display: none">Non-secure links</p>
+										<ul id="http-links" style="margin-left: 20px"></ul>
+									</div>
+								</div>
+							</div>
+							<div class="card" id="extDiv" style="display: none">
+								<h5 class="card-header">External page links <div class="badge badge-primary"></div></h5>
+								<div class="row card-body">
+									<div class="col-md-auto">
+									<ul id="external-links" style="margin-left: 20px"></ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="iconBox">
+							<i id="saveBtnPgLinks" class="iconStyle material-icons" title="Click here to download">save_alt </i>
+							<i id="copyBtnPgLinks" class="iconStyle material-icons">content_copy </i>
+						</div>
+				</div>
+				<!-- Geo IP -->
+				<div class="tab-pane fade" id="geo-ip-location" style="overflow-wrap: break-word">
+						<div class="myRow">
+							<div class="card mb-12">
+							<div class="row no-gutters">
+								<div class="col-md-12">
+									<div class="container-fluid">
+										<div class="map-responsive">
+											<iframe width="600" frameborder="0" style="border:0" allowfullscreen></iframe>
+										</div>
+									</div>
+								</div>
+								<div class="card-body">
+									<h5 class="card-title">Domain</h5>
+									<h5 class="card-title">IP</h5>
+									<p class="card-text"></p>
+									<table class="table col-md-6">
+										<tbody></tbody>
+									</table>
+								</div>
+							</div>
+							</div>
+						</div>
+						<div class="iconBox">
+							<i id="copyBtnGeoIP" class="iconStyle material-icons">content_copy </i>
+						</div>
+				</div>
+				<!-- Cookies -->
+				<div class="tab-pane fade" id="cookies">
+						<div class="myRow">
+							<div id="cookies-results" style="padding-top: 15px;"></div>
+						</div>
+				</div>
+				<!-- Page Archive -->
+				<div class="tab-pane fade" id="page-archive" style="overflow-wrap: break-word">
+						<div class="myRow">
+							<div class="container-fluid px-0">
+								<div id="wayback_result">
+									<h2 style="padding-top: 20px;">Available page history:</h2>
+									<p id="wayback_text" style="padding-top: 10px;">See result on Archive.org</p>
+								</div>
+							</div>
+						</div>
+				</div>
+				<!-- Reputation -->
+				<div class="tab-pane fade" id="domain-reputation" style="overflow-wrap: break-word">
+						<div class="myRow">
+							<div class="card">
+								<h5 class="card-header">Reputation Score <div class="badge badge-success" id="dRepScore"></div></h5>
+								<div class="card-body">
+									<div id="urlReputation"></div>
+									<br>
+									<div class="alert alert-info alert-dismissible fade show" role="alert">
+										<h6 class="alert-heading">The resulting reputation score is based on:</h6>
+										<hr>
+										<p><li>The website content and it relation to other domains, and host configuration</li><li>The domain's Whois record</li><li>Whether the domain is deemed malicious in numerous malware data feeds</li><li>Infrastructure of the domain's IP addresses</li><li>Reverse IP lookup</li><li>The domain's SSL certificates, SSL connection, and configuration</li></p>
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="iconBox">
+							<i id="saveBtnReputation" class="iconStyle material-icons" title="Click here to download">save_alt </i>
+							<i id="copyBtnReputation" class="iconStyle material-icons">content_copy </i>
+						</div>
+				</div>
+				<!-- Inspect Ad Slot -->
+				<div class="tab-pane fade" id="adSlot">
+						<div class="myRow">
+							<div class="card" id="ads" style="display: none">
+								<h5 class="card-header">Authorized Digital Sellers</h5>
+								<div class="card-body">
+									<pre class="card-text">
+									</pre>
+								</div>
+							</div>
+							<div class="card" id="app-ads" style="display: none">
+								<h5 class="card-header">Authorized Digital Sellers for Apps</h5>
+								<div class="card-body">
+									<pre class="card-text">
+									</pre>
+								</div>
+							</div>
+						</div>
+						<div class="iconBox">
+							<i id="saveBtnAds" class="iconStyle material-icons" title="Click here to download">save_alt </i>
+							<i id="copyBtnAds" class="iconStyle material-icons">content_copy </i>
+						</div>
+				</div>
+				<!-- Web Crawlers -->
+				<div class="tab-pane fade" id="webCrawlers">
+						<div class="myRow">
+							<div class="card">
+								<h5 class="card-header">robots.txt</h5>
+								<div class="row card-body">
+									<div class="col-md-auto">
+									<pre class="card-text"></pre>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="iconBox">
+							<i id="saveBtnCrawlers" class="iconStyle material-icons md-24" title="Click here to download">save_alt </i>
+							<i id="copyBtnCrawlers" class="iconStyle material-icons md-24">content_copy </i>
+						</div>
+				</div>
+			</div>
+		</div>
+		<!-- Loading Modal -->
+		<div class="modal fade" id="loadingModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="loadingModalCenterTitle" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<h5 class="modal-title" id="loadingModalCenterTitle">
+				  <div class="spinner-grow text-primary" style="width: 1.6rem; height: 1.6rem;" role="status">
+					  <span class="sr-only">Loading...</span>
+					</div>
+					Inspecting
+				  </h5>
+				  <small class="text-muted" id="etd"></small>
+			  </div>
+				<div class="modal-body">
+					<span class="url" style="display:inline-block;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;max-width:29em"></span>
+				</div>
+			</div>
+		  </div>
+		</div>
+        <div id="modal"></div>
+        <span id="scrollup" title="Click here to scroll up!"><img src="moonrise.png" /></span>
+		<!-- Page Archive Modal -->
+		<div id="pgArchiveModal" class="modal fade pgArchiveModal" tabindex="-1" role="dialog" aria-labelledby="pgArchiveModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-xl" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel"></h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body" style="text-align:center">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>		  
+		<div id="toast" aria-live="polite" aria-atomic="true">
+			<div id='toastMalware' class='toast' role='alert' aria-live='assertive' aria-atomic='true' data-autohide='false'></div>
+			<div id='toastPhish' class='toast' role='alert' aria-live='assertive' aria-atomic='true' data-autohide='false'></div>
+			<div id='toastNewDomain' class='toast' role='alert' aria-live='assertive' aria-atomic='true' data-autohide='false'></div>
+		</div>
+		<div id="snackbar"></div>
+		<div id="notifyinfo"></div>
+		<script src="js/lib/highcharts.js"></script>
+		<script src="js/lib/networkgraph.js"></script>
+		<script src="js/lib/exporting.js"></script>
+		<script src="js/lib/offline-exporting.js"></script>
+    </body>
+</html>
