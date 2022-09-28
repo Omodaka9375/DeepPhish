@@ -59,8 +59,6 @@ Enter your own keys (free tier will do):
 ![Link](images/inspect-link.png)
 
 
-![Direct](images/direct-search.png)
-
 ### Popup page
 
 ![Popup](images/popup.png)
