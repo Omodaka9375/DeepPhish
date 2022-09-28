@@ -286,7 +286,7 @@ chrome.runtime.onMessage.addListener(
         p.style.fontSize = '18px';
         p.style.fontStyle = 'normal';
         p.style.fontWeight = 'normal';
-        p.textContent = 'This website looks suspicious! \n Proceede with caution!';
+        p.textContent = 'This website looks suspicious! \n Proceed with caution!';
 
         let svg = `
         <svg id="Layer_1" style="enable-background:new 0 0 40 40;" version="1.1" viewBox="0 0 40 40" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><style type="text/css">
