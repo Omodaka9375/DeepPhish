@@ -34,7 +34,9 @@ A light inspection and detection plugin that uses machine learning and a set of 
 - Open new tab and click DeepPhish icon at top right to show direct search
 
 ## API keys 
+
 Enter your own keys (free tier will do):
+
 ![API](images/apikeys.png)
 
 
