@@ -31,8 +31,8 @@ A light inspection and detection plugin that uses machine learning and a set of 
 
 ## Usage
 
-- Use context menu on a page (right-click "Inspect page with DeepPhish")
-- Use context menu on a link (right-click "Inspect link with DeepPhish")
+- Use context menu on any page (right-click "Inspect page with DeepPhish")
+- Use context menu on any link (right-click "Inspect link with DeepPhish")
 
 ## API keys 
 
